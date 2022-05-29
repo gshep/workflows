@@ -42,14 +42,12 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            <details><summary>$GITHUB_SHA</summary>
+            <details><summary>"$GITHUB_SHA"</summary>
             <details><summary>Pallet tests (values are in nanoseconds)</summary>
             
-            ${{ steps.test-regressions-pallets.outputs.body }}
             </details>
             
             <details><summary>Runtime tests (values are in nanoseconds)</summary>
             
-            ${{ steps.test-regressions-runtime.outputs.body }}
             </details>
             </details>
