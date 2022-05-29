@@ -35,3 +35,21 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: "Create comment"
+        uses: peter-evans/create-or-update-comment@v2
+        continue-on-error: true
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <details><summary>$GITHUB_SHA</summary>
+            <details><summary>Pallet tests (values are in nanoseconds)</summary>
+            
+            ${{ steps.test-regressions-pallets.outputs.body }}
+            </details>
+            
+            <details><summary>Runtime tests (values are in nanoseconds)</summary>
+            
+            ${{ steps.test-regressions-runtime.outputs.body }}
+            </details>
+            </details>
