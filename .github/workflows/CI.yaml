@@ -22,7 +22,7 @@ env:
 jobs:
   # This workflow contains a single job called "build"
   build:
-    environment: test1
+      #    environment: test1
     env:
         MY_SECRET_NAME: ${{ secrets.MY_SECRET_NAME }}
         NIGHTLY_TOOLCHAIN_VERSION: ${{ secrets.NIGHTLY_TOOLCHAIN_VERSION }}
