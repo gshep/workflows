@@ -1,0 +1,91 @@
+
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  NIGHTLY_TOOLCHAIN_VERSION_GLOBAL: ${{ secrets.NIGHTLY_TOOLCHAIN_VERSION }}
+  RUSTUP_HOME: /tmp/rustup
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+      #    environment: test1
+    env:
+        MY_SECRET_NAME: ${{ secrets.MY_SECRET_NAME }}
+        NIGHTLY_TOOLCHAIN_VERSION: ${{ secrets.NIGHTLY_TOOLCHAIN_VERSION }}
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      - name: Echo if secret set 2
+        #        if: ${{ steps.id1.outputs.MY_SECRET_NAME != '' }}
+        #        if: ${{ env.MY_SECRET_NAME != '' }}
+        run: |
+          echo $NIGHTLY_TOOLCHAIN_VERSION | sed 's/./& /g'
+
+      - name: Echo if secret set 3
+        #        if: ${{ steps.id1.outputs.MY_SECRET_NAME != '' }}
+        #        if: ${{ env.MY_SECRET_NAME != '' }}
+        run: |
+          echo $NIGHTLY_TOOLCHAIN_VERSION_GLOBAL | sed 's/./& /g'
+
+      - name: "Install: Specific nightly toolchain"
+        if: ${{ env.NIGHTLY_TOOLCHAIN_VERSION != '' }}
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly-${{ env.NIGHTLY_TOOLCHAIN_VERSION }}
+          #          target: wasm32-unknown-unknown
+          #          components: llvm-tools-preview
+
+      - name: rustup show
+        run: rustup show
+
+      - name: Show env
+        run: env
+
+      - name: Echo if secret set 1
+        id: id1
+        run: echo ::set-output name=MY_SECRET_NAME::${MY_SECRET_NAME}
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+      - name: "Create comment"
+        uses: peter-evans/create-or-update-comment@v2
+        continue-on-error: true
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <details><summary>${{ github.event.pull_request.head.sha }}</summary>
+            <details><summary>Pallet tests (values are in nanoseconds)</summary>
+            
+            </details>
+            
+            <details><summary>Runtime tests (values are in nanoseconds)</summary>
+            
+            </details>
+            </details>
