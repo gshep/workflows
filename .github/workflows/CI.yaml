@@ -16,6 +16,7 @@ on:
 
 env:
   NIGHTLY_TOOLCHAIN_VERSION_GLOBAL: ${{ secrets.NIGHTLY_TOOLCHAIN_VERSION }}
+  RUSTUP_HOME: /tmp/rustup
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
